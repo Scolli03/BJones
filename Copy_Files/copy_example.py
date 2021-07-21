@@ -9,17 +9,17 @@ def copy_from_dump():
 	"""
 
 	#get contents of dump folder HINT(os module)
-	root = r"C:\Users\shainc\Desktop\gom_scripts_shared"
-	folder1 = "C:/folder1"
-	folder2 = "C:/folder2"
-	folder3 = "C:/folder3"
+	root = r"dump_folder"
+	folder1 = r"Folder_1"
+	folder2 = r"Folder_2"
+	folder3 = r"Folder_3"
 	files = os.listdir(root)
 
 	#iterate over files in specified folder HINT:(for loop) the os module
 	for file in files:
 		file_fullpath = os.path.join(root,file)
 		#specify type of file your looking for
-		if file.endswith(".jpeg"):			
+		if file.lower().endswith(".jpeg"):			
 			#copy file to 3 different locations
 			copy2(file_fullpath,os.path.join(folder1,file))
 			copy2(file_fullpath,os.path.join(folder2,file))
@@ -33,5 +33,5 @@ def print_name(name):
 print("This was run in example.py before main check")
 
 if __name__ == '__main__':
-	print("this was run after main check")
-	#copy_from_dump()
+	
+	copy_from_dump()
