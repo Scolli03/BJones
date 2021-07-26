@@ -2,6 +2,7 @@ from shutil import copy2
 import os
 import sys
 import time
+from typing import List
 
 def undo_test(root, copied):
 	for file in copied:
@@ -10,18 +11,21 @@ def undo_test(root, copied):
 			copy2(file, dump_loc)
 		os.remove(file)
 
-def validate_input(user_path):
-	#boolean to determine if user enters correct input
-	valid = False
+def validate_and_assign(path,assign_to):
 
-	#check if input folder is real folder
-	if not os.path.isdir(user_path):
-		print(f"The entered path:{user_path} is not valid, PLease try again.")
+	while not os.path.isdir(path):
+		input(f"The path {path} is not valid, please try again...: ")
+
+	if type(assign_to) == list:
+		assign_to.append(path)
+	elif type(assign_to) == str:
+		assign_to = path
 	else:
-		root = user_path
-		valid = True
+		return False
 
-	return valid
+	return True
+		
+		
 
 #function to copy files from dump to mulitple locations
 def copy_from_dump():
@@ -57,27 +61,49 @@ if __name__ == '__main__':
 	#set defualt dump folder
 	root = r"Copy_Files\dump_folder"
 
-	user_defined_root = input(f"The current dump folder is {root}.\nPress any key to accept this folder or enter new dump folder path: ")
+	user_defined_root = input(f"The current dump folder is {root}.\nPress Enter key to accept this folder or enter new dump folder path: ")
 
 	if user_defined_root != "":
-		while not validate_input(user_defined_root)
+		validated = validate_and_assign(user_defined_root,root)
+		if not validated:
+			input("Was not able to validate replacement path...press any key to exit scrtip")
+			sys.exit()
 
 	folders = [r"Copy_Files\Folder_1",	r"Copy_Files\Folder_2",	r"Copy_Files\Folder_3"]
 
-	print("The following folders are the copy directories")
+	seporator = "\n\t"	
 
-	for folder in folders:
-		print(folder)
+	print(f"The following folders are the copy directories\n")
 
-	change_folders = ""
-	while change_folders != "Y" or change_folders != "N":
-		change_folders = input("Are the current copy folders correct Y/N?")
-		if change_folders != "Y" or change_folders != "N":
-			print("That is not a valid input, please enter \"Y\" or \"N\"")
-			change_folders = ""
+	for f in folders:
+		print(f"\t{f}\n")	
 
-	if change_folders == "Y":
-		new_folder = input("Enter first new ouput folder: ")
+	
+	message = """Enter new paths one at a time to add to current list of folders\n
+								or multiple paths separated by a comma to replace current list: """
+	change_folders = input("Would you like to change the copy folders, Y/N?").lower()
+	accepted = False
+	while not accepted:		
+		if change_folders == "y":
+			new_folder_s = input(message).split(",")
+			if len(new_folder_s) > 1:
+				for f in new_folder_s:
+					validated = validate_and_assign(f,folders)
+					if not validated:
+						
+				folders = new_folder_s
+				accepted = True
+			elif len(new_folder_s) == 1:
+				validated = validate_and_assign(new_folder_s[0],folders)
+				if validated:
+					folders.append(new_folder_s)
+					message = "Enter another path or press Enter to continue."
+			elif new_folder_s == "":
+				accepted = True
+
+
+
+
 
 
 	input("Press any key to copy files")
