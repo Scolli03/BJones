@@ -1,1 +1,4 @@
+#add requirements here
 dearpygui==0.8.64
+pandas==1.3.4
+numpy==1.21.2
